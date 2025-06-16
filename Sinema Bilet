@@ -1,0 +1,248 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace SinemaBiletUygulaması
+{
+    public partial class Form1 : Form
+    {
+        Dictionary<string, List<string>> seansKoltukDurumlari = new Dictionary<string, List<string>>();
+        List<Button> koltukButonlari = new List<Button>();
+        string seciliKoltuk = "";
+
+
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+        
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            button14.PerformClick();
+        }
+
+        private void comboBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (comboBox1.Text == "How to Train Your Dragon")
+            {
+                comboBox2.Text = "09.30";
+            }
+            else if (comboBox1.Text == "Sihirli Annem: Hepimiz Biriz")
+            {
+                comboBox2.Text = "11.00";
+            }
+            else if (comboBox1.Text == "Siccin 8")
+            {
+                comboBox2.Text = "12.30";
+            }
+            else if (comboBox1.Text == "Ballerina")
+            {
+                comboBox2.Text = "14.00";
+            }
+            else if (comboBox1.Text == "Materialists")
+            {
+                comboBox2.Text = "15.30";
+            }
+            else if (comboBox1.Text == "Hep Yek: Loto")
+            {
+                comboBox2.Text = "17.00";
+            }
+            else if (comboBox1.Text == "Young Werther")
+            {
+                comboBox2.Text = "18.30";
+            }
+            else if (comboBox1.Text == "Mutlu Oyuncak Dükkanı")
+            {
+                comboBox2.Text = "20.00";
+            }
+            else if (comboBox1.Text == "Aşkın Yüzü")
+            {
+                comboBox2.Text = "21.30";
+            }
+            else if (comboBox1.Text == "Rafadan Tayfa: Kapadokya")
+            {
+                comboBox2.Text = "23.00";
+            }
+        }
+
+        private void comboBox2_TextChanged(object sender, EventArgs e)
+        {
+            if (comboBox2.Text == "09.30")
+            {
+                comboBox1.Text = "How to Train Your Dragon";
+            }
+            else if (comboBox2.Text == "11.00")
+            {
+                comboBox1.Text = "Sihirli Annem: Hepimiz Biriz";
+            }
+            else if (comboBox2.Text == "12.30")
+            {
+                comboBox1.Text = "Siccin 8";
+            }
+            else if (comboBox2.Text == "14.00")
+            {
+                comboBox1.Text = "Ballerina";
+            }
+            else if (comboBox2.Text == "15.30")
+            {
+                comboBox1.Text = "Materialists";
+            }
+            else if (comboBox2.Text == "17.00")
+            {
+                comboBox1.Text = "Hep Yek: Loto";
+            }
+            else if (comboBox2.Text == "18.30")
+            {
+                comboBox1.Text = "Young Werther";
+            }
+            else if (comboBox2.Text == "20.00")
+            {
+                comboBox1.Text = "Mutlu Oyuncak Dükkanı";
+            }
+            else if (comboBox2.Text == "21.30")
+            {
+                comboBox1.Text = "Aşkın Yüzü";
+            }
+            else if (comboBox2.Text == "23.00")
+            {
+                comboBox1.Text = "Rafadan Tayfa: Kapadokya";
+            }
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            string seans = comboBox2.Text;
+            if (string.IsNullOrEmpty(seans))
+            {
+                MessageBox.Show("Lütfen bir seans seçiniz.");
+                return;
+            }
+
+            // Koltukların arka plan rengini güncelle
+            foreach (var btn in koltukButonlari)
+            {
+                if (seansKoltukDurumlari[seans].Contains(btn.Text))
+                {
+                    btn.BackColor = Color.Red;
+                }
+                else
+                {
+                    btn.BackColor = Color.Green;
+                }
+            }
+            
+
+            seciliKoltuk = "";
+
+            label3.Text = "Seans : " + comboBox2.Text + "Seçilen Film: " + comboBox1.Text;
+        }
+
+        private void KoltukSecildi(object sender, EventArgs e)
+        {
+            Button btn = sender as Button;
+
+            if (btn.BackColor == Color.Red)
+            {
+                MessageBox.Show("Bu koltuk zaten rezerve edilmiş.");
+                return;
+            }
+
+            // Önceki seçimi temizle
+            foreach (var b in koltukButonlari)
+            {
+                if (b.BackColor == Color.Yellow)
+                    b.BackColor = Color.Green;
+            }
+
+            btn.BackColor = Color.Yellow;
+            seciliKoltuk = btn.Text;
+        
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            string seans = comboBox2.Text;
+            if (string.IsNullOrEmpty(seans))
+            {
+                MessageBox.Show("Lütfen bir seans seçiniz.");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(seciliKoltuk))
+            {
+                MessageBox.Show("Lütfen bir koltuk seçiniz.");
+                return;
+            }
+
+            if (!seansKoltukDurumlari[seans].Contains(seciliKoltuk))
+            {
+                seansKoltukDurumlari[seans].Add(seciliKoltuk);
+
+                foreach (var btn in koltukButonlari)
+                {
+                    if (btn.Text == seciliKoltuk)
+                    {
+                        btn.BackColor = Color.Red;
+                        break;
+                    }
+                }
+
+                seciliKoltuk = "";
+                MessageBox.Show("Koltuk başarıyla rezerve edildi.");
+            }
+            else
+            {
+                MessageBox.Show("Bu koltuk zaten rezerve edilmiş.");
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            TumButonlariBul(this);
+
+            string[] saatler = { "09.30", "11.00", "12.30", "14.00", "15.30", "17.00", "18.30", "20.00", "21.30", "23.00" };
+            foreach (var saat in saatler)
+            {
+                seansKoltukDurumlari[saat] = new List<string>();
+                comboBox2.Items.Add(saat);
+            }
+
+            comboBox2.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
+
+
+        }
+        private void TumButonlariBul(Control parent)
+        {
+            foreach (Control ctrl in parent.Controls)
+            {
+                if (ctrl is Button btn && btn.Text.Length == 2)
+                {
+                    koltukButonlari.Add(btn);
+                    btn.Click += KoltukSecildi;
+                    btn.BackColor = Color.Green;
+                }
+                else if (ctrl.HasChildren)
+                {
+                    TumButonlariBul(ctrl); // içindeki kontrolleri de tara
+                }
+            }
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
